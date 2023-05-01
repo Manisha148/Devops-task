@@ -3,9 +3,7 @@ def registry  = 'https://stalinrtp.jfrog.io'
 def version   = '1.0.2'
 def app
 pipeline {
-    agent{
-        any
-    }
+    agent any
     stages {
         stage('Build') {
             steps {
