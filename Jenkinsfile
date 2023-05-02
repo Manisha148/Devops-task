@@ -21,19 +21,29 @@ pipeline {
 //             }
 //         }
         
-        stage ("Sonar Analysis") {
-            environment {
-               scannerHome = tool 'SonarQubeScanner'
-            }
-            steps {
-                echo '<--------------- Sonar Analysis started  --------------->'
-                withSonarQubeEnv('SonarServer') {
-                    sh "${scannerHome}/bin/sonar-scanner"
-                }    
-                echo '<--------------- Sonar Analysis stopped  --------------->'
-            }   
-        }    
-    
+//         stage ("Sonar Analysis") {
+//             environment {
+//                scannerHome = tool 'SonarQubeScanner'
+//             }
+//             steps {
+//                 echo '<--------------- Sonar Analysis started  --------------->'
+//                 withSonarQubeEnv('SonarServer') {
+//                     sh "${scannerHome}/bin/sonar-scanner"
+//                 }    
+//                 echo '<--------------- Sonar Analysis stopped  --------------->'
+//             }   
+//         }    
+    	stage('SonarQube analysis') {
+    		
+    		steps {
+    			withSonarQubeEnv(credentialsId: 'sonarqube', installationName: 'Production SonarQubeScanner') {
+         			sh '''$SCANNER_HOME/bin/sonar-scanner \
+         			-Dsonar.projectKey=SonarScanner \
+         			-Dsonar.projectName=SonarScanner \
+         			-Dsonar.projectVersion=${BUILD_NUMBER}-${GIT_COMMIT_SHORT}'''
+       			}
+     		}
+  	}
           stage ("Quality Gate") {
 
             steps {
