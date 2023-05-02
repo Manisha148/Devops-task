@@ -21,25 +21,19 @@ pipeline {
             }
         }
         
-//         stage ("Sonar Analysis") {
-//             environment {
-//                scannerHome = tool 'SonarQubeScanner'
-//             }
-//             steps {
-//                 echo '<--------------- Sonar Analysis started  --------------->'
-//                 withSonarQubeEnv('SonarServer') {
-//                     sh "${scannerHome}/bin/sonar-scanner"
-//                 }    
-//                 echo '<--------------- Sonar Analysis stopped  --------------->'
-//             }   
-//         }    
-            stage('SonarQube Analysis') {
-        def mvn = tool 'Default Maven';
-        withSonarQubeEnv() {
-          sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=sonar"
-        }
-      }
-        
+        stage ("Sonar Analysis") {
+            environment {
+               scannerHome = tool 'SonarQubeScanner'
+            }
+            steps {
+                echo '<--------------- Sonar Analysis started  --------------->'
+                withSonarQubeEnv('SonarServer') {
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }    
+                echo '<--------------- Sonar Analysis stopped  --------------->'
+            }   
+        }    
+    
           stage ("Quality Gate") {
 
             steps {
