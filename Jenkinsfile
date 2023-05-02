@@ -33,17 +33,12 @@ pipeline {
 //                 echo '<--------------- Sonar Analysis stopped  --------------->'
 //             }   
 //         }    
-    	stage('SonarQube analysis') {
-    		
-    		steps {
-    			withSonarQubeEnv(credentialsId: 'sonarqube', installationName: 'Production SonarQubeScanner') {
-         			sh '''$SCANNER_HOME/bin/sonar-scanner \
-         			-Dsonar.projectKey=SonarScanner \
-         			-Dsonar.projectName=SonarScanner \
-         			-Dsonar.projectVersion=${BUILD_NUMBER}-${GIT_COMMIT_SHORT}'''
-       			}
-     		}
-  	}
+    	 stage('SonarQube Analysis') {
+    def mvn = tool 'Default Maven';
+    withSonarQubeEnv() {
+      sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=sonar"
+    }
+  }
           stage ("Quality Gate") {
 
             steps {
